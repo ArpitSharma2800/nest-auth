@@ -5,6 +5,7 @@ import { Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateC
 @Entity()
 export class User {
     @PrimaryColumn()
+    @Generated("uuid")
     userID: string;
 
     @Column({
