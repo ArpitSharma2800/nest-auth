@@ -38,12 +38,31 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<User | undefined> {
     try {
       const user = await this.dataSource
         .getRepository(User)
         .createQueryBuilder("user")
         .where("user.userID = :id", { id })
+        .getOne();
+      return user;
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        console.error('Database query failed:', error);
+        throw new Error('Database query failed');
+      } else {
+        console.error('Unknown error:', error);
+        throw new Error('An unknown error occurred');
+      }
+    }
+  }
+
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    try {
+      const user = await this.dataSource
+        .getRepository(User)
+        .createQueryBuilder("user")
+        .where("user.userEmail = :email", { email })
         .getOne();
       return user;
     } catch (error) {
