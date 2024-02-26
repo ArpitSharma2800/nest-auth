@@ -57,6 +57,44 @@ $ npm run migration:run
 $ npm run migration:revert
 ```
 
-## License
+## APIs
 
-Nest is [MIT licensed](LICENSE).
+### Login API
+
+To login, make a POST request to the `/auth/login` endpoint with the user's email and password. Here's an example using curl:
+
+Note* - JWT secret are supposed to encrypted for production use.
+
+```bash
+curl --location 'localhost:3000/auth/login' \
+--header 'Content-Type: application/json' \
+--data '{
+    "useremail":"your-email@example.com",
+    "password":"your-password"
+}'
+```
+### Get User by Email API
+
+To get a user by email, make a GET request to the `/users/email/{email}` endpoint. Here's an example using curl:
+
+```bash
+curl --location --request GET 'localhost:3000/users/email/your-email@example.com' \
+--header 'Content-Type: application/json' \
+--data '{
+    "isActive": true
+}'
+```
+
+### Create User API
+
+To create a user, make a POST request to the `/users` endpoint. Here's an example using curl:
+
+```bash
+curl --location 'localhost:3000/users' \
+--header 'Content-Type: application/json' \
+--data '{
+    "userEmail": "your-email@example.com",
+    "password": "your-password",
+    "isActive": true
+}'
+```
