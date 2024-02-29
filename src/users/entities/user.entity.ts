@@ -19,22 +19,39 @@ export class User {
         type: "varchar",
         unique: true,
         nullable: false,
+        default: null
     })
     password: string;
+
+    @Column({
+        type: "varchar",
+        nullable: false,
+        unique: true,
+        default: null
+    })
+    iv: string;
+
+    @Column({
+        type: "varchar",
+        nullable: false,
+        unique: true,
+        default: null
+    })
+    salt: string;
+
+    @Column({
+        type: "varchar",
+        nullable: false,
+        unique: true,
+        default: null
+    })
+    keyDerivationInfo: string;
 
     @Column({
         type: "boolean",
         nullable: false,
     })
     isActive: boolean;
-
-    @Column({
-        type: "varchar",
-        nullable: true,
-        unique: true,
-        default: null
-    })
-    otpsecreat: string;
 
     @CreateDateColumn()
     createDate

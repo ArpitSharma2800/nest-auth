@@ -2,14 +2,43 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Public } from 'src/public.decorator';
+import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import { promisify } from 'util';
+import { encryptConstants } from './constants/constant';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Public()
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
+    const ivData = randomBytes(16);
+    const saltData = randomBytes(16).toString('base64');
+    const passwordToEncrypt = createUserDto.password;
+    const combinedPassword = createUserDto.password + encryptConstants.secret;
+
+    const key = (await promisify(scrypt)(combinedPassword, saltData, 32)) as Buffer;
+    const cipher = createCipheriv('aes-256-ctr', key, ivData);
+
+    const encryptedPassword = Buffer.concat([
+      cipher.update(passwordToEncrypt),
+      cipher.final(),
+    ]);
+    // console.log(decryptedText.toString('utf-8'));
+    console.log(encryptedPassword.toString('base64'));
+    const userCreatedInfo = await this.usersService.createUser({
+      ...createUserDto,
+      password: encryptedPassword.toString('base64'),
+      keyDerivationInfo: key.toString('base64'),
+      iv: ivData.toString('base64'),
+      salt: saltData
+    })
+
+    const { keyDerivationInfo, password, iv, salt, ...responseWithoutSensitiveInfo } = userCreatedInfo;
+    return responseWithoutSensitiveInfo;
   }
 
   @Get()
