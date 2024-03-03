@@ -1,8 +1,10 @@
-import { Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Role } from "src/auth/Roles/role.enum";
+import { Column, CreateDateColumn, Entity, Generated, Index, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 
 
 @Entity()
+@Index(["userEmail", "userID"], { unique: true })
 export class User {
     @PrimaryColumn()
     @Generated("uuid")
@@ -22,6 +24,13 @@ export class User {
         default: null
     })
     password: string;
+
+    @Column({
+        type: "enum",
+        enum: Role,
+        default: Role.GHOST,
+    })
+    Role: Role
 
     @Column({
         type: "varchar",

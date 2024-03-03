@@ -23,6 +23,8 @@ export class UsersService {
       return saveUser;
     } catch (error) {
       if (error instanceof QueryFailedError) {
+        console.log(error);
+
         throw new Error('Database query failed');
       } else if (error.message === 'User data is null or undefined') {
         throw new Error('User data cannot be null or undefined');

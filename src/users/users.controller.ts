@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,8 @@ import { Public } from 'src/public.decorator';
 import { createCipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 import { encryptConstants } from './constants/constant';
+import { Role } from 'src/auth/Roles/role.enum';
+import { Roles } from 'src/auth/Roles/roles.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -27,8 +29,6 @@ export class UsersController {
       cipher.update(passwordToEncrypt),
       cipher.final(),
     ]);
-    // console.log(decryptedText.toString('utf-8'));
-    console.log(encryptedPassword.toString('base64'));
     const userCreatedInfo = await this.usersService.createUser({
       ...createUserDto,
       password: encryptedPassword.toString('base64'),
@@ -52,6 +52,7 @@ export class UsersController {
   }
 
   @Get('email/:email')
+  @Roles(Role.BranchManager)
   findOneByEmail(@Param('email') email: string) {
     return this.usersService.findOneByEmail(email);
   }

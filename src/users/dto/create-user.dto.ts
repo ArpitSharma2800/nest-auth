@@ -1,3 +1,4 @@
+import { Role } from "src/auth/Roles/role.enum";
 
 export class CreateUserDto {
     userEmail: string;
@@ -6,4 +7,5 @@ export class CreateUserDto {
     iv: string;
     salt: string;
     keyDerivationInfo: string;
+    Role: Role;
 }

@@ -7,13 +7,17 @@ import { dataSourceOptions } from 'db/database.provider';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { RolesGuard } from './auth/Roles/roles.guard';
 
 @Module({
   imports: [TypeOrmModule.forRoot(dataSourceOptions), UsersModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_GUARD,
-    useClass: AuthGuard //authentication to all the end
-  }],
+    useClass: AuthGuard, //authentication to all the end
+  }, {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },],
 })
 export class AppModule { }
