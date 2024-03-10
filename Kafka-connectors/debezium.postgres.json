@@ -1,0 +1,16 @@
+{
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "type.name": "_doc",
+    "behavior.on.null.values": "delete",
+    "tasks.max": "1",
+    "key.ignore": "false",
+    "topics.regex": "nest-auth.public.user",
+    "flush.synchronously": "true",
+    "schema.ignore": "true",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+    "connection.url": "http://192.168.1.2:9200/",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "schemas.enable": "false"
+}
